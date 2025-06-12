@@ -8,19 +8,40 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State private var usedWords = [String]()
+    @State private var rootWord = ""
+    @State private var newWord = ""
+    
     var body: some View {
-        VStack{
-            Text("This is it")
+        NavigationStack {
+            List {
+                Section {
+                    TextField("Enter your word", text: $newWord)
+                        .textInputAutocapitalization(.never)
+                }
+                
+                Section {
+                    ForEach(usedWords, id: \.self) {word in
+                        HStack{
+                            Image(systemName: "\(word.count).circle")
+                            Text(word)
+                        }
+                    }
+                }
+            }
+            .navigationTitle(rootWord)
+            .onSubmit(addNewWord)
         }
     }
-    func testStrings(){
-        let word = "swift"
-        let checker = UITextChecker()
+    func addNewWord(){
+        let answer = newWord.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
         
-        let range = NSRange(location: 0, length: word.utf16.count)
-        let misspelledRange = checker.rangeOfMisspelledWord(in: word, range: range, startingAt: 0, wrap: false, language: "en")
-        let allGood = misspelledRange.location == NSNotFound
+        guard answer.count > 0 else {return}
         
+        // extra validation to come
+        withAnimation{
+            usedWords.insert(answer, at: 0)
+        }
     }
 }
 
