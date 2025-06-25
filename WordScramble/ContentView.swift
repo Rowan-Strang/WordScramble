@@ -62,6 +62,15 @@ struct ContentView: View {
             wordError(title: "word not recognised", message: "you can't jsut make this stuff up")
             return
         }
+        guard isNotOriginalWord(word: answer) else {
+            wordError(title: "ahhhh, nice try...", message: "but No, you need to make new words")
+            return
+        }
+        
+        guard isLongerThanThreeChar(word: answer) else {
+            wordError(title: "Word too Short", message: "Be better pal")
+            return
+        }
         
         // extra validation to come
         withAnimation{
@@ -105,6 +114,23 @@ struct ContentView: View {
         let misspelledRange = checker.rangeOfMisspelledWord(in: word, range: range, startingAt: 0, wrap: false, language: "en")
         return misspelledRange.location == NSNotFound
     }
+    
+    func isNotOriginalWord(word: String) -> Bool {
+        if word == rootWord {
+            return false
+        } else {
+            return true
+        }
+    }
+    
+    func isLongerThanThreeChar(word: String)-> Bool {
+        if word.count <= 3 {
+            return false
+        } else {
+            return true
+        }
+    }
+    
     func wordError(title: String, message: String) {
         errorTitle = title
         errorMessage = message
