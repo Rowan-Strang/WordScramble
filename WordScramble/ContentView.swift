@@ -15,9 +15,11 @@ struct ContentView: View {
     @State private var errorTitle = ""
     @State private var errorMessage = ""
     @State private var showingError = false
+    @State private var playerScore = 0
     
     var body: some View {
         NavigationStack {
+            Text("Your Score: \(playerScore)")
             List {
                 Section {
                     TextField("Enter your word", text: $newWord)
@@ -37,9 +39,15 @@ struct ContentView: View {
             .onSubmit(addNewWord)
             .onAppear(perform: startGame)
             .alert(errorTitle, isPresented: $showingError){
-//                Button("OK") { }
+                Button("OK") { }
             } message: {
                 Text(errorMessage)
+            }
+            .toolbar {
+                Button("New Game") {
+                    startGame()
+                    usedWords = [String]()
+                }
             }
         }
     }
@@ -77,6 +85,8 @@ struct ContentView: View {
             usedWords.insert(answer, at: 0)
         }
         newWord = ""
+        
+        playerScore = answer.count/2 + usedWords.count/3 + playerScore
     }
     
     func startGame(){
